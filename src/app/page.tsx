@@ -70,10 +70,10 @@ export default function Home() {
         <h1 className="text-3xl font-bold">Googleカレンダー一括登録</h1>
         {session ? (
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">{session.user?.email}</span>
+            <span className="text-sm text-gray-100">{session.user?.email}</span>
             <button
               onClick={() => signOut()}
-              className="text-sm text-red-600 hover:text-red-500"
+              className="text-sm text-red-400 hover:text-red-300"
             >
               ログアウト
             </button>
@@ -91,14 +91,14 @@ export default function Home() {
       {session ? (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="text" className="block text-sm font-medium mb-2">
+            <label htmlFor="text" className="block text-base font-medium mb-2 text-gray-100">
               イベントテキスト
             </label>
             <textarea
               id="text"
               value={text}
               onChange={(e) => setText(e.target.value)}
-              className="w-full h-48 p-2 border rounded-md"
+              className="w-full h-96 p-4 border rounded-md bg-gray-800 text-gray-100 placeholder-gray-400"
               placeholder="例：会議: 2024/01/08 13:00-14:00 [会議室A]"
             />
           </div>
@@ -106,13 +106,13 @@ export default function Home() {
           <button
             type="submit"
             disabled={loading || !text.trim()}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 disabled:opacity-50"
+            className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 disabled:opacity-50"
           >
             {loading ? '登録中...' : '登録する'}
           </button>
         </form>
       ) : (
-        <p className="text-center text-gray-600">
+        <p className="text-center text-gray-400">
           イベントを登録するには、Googleアカウントでログインしてください。
         </p>
       )}
