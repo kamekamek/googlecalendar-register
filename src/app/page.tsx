@@ -3,12 +3,15 @@
 import { useState } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { CalendarEvent } from '@/lib/googleCalendar';
+import { FaEnvelope } from 'react-icons/fa';
+import Modal from 'react-modal';
 
 export default function Home() {
   const { data: session, status } = useSession();
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,7 +73,20 @@ export default function Home() {
         <h1 className="text-3xl font-bold">Googleカレンダー一括登録</h1>
         {session ? (
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-100">{session.user?.email}</span>
+            <FaEnvelope className="text-gray-100 cursor-pointer" onClick={() => setIsModalOpen(true)} />
+            <Modal
+              isOpen={isModalOpen}
+              onRequestClose={() => setIsModalOpen(false)}
+              contentLabel="Email Modal"
+              className="bg-white p-4 rounded-md shadow-lg"
+              overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+            >
+              <h2 className="text-lg font-bold mb-2">メールアドレス</h2>
+              <p className="text-gray-800">{session.user?.email}</p>
+              <button onClick={() => setIsModalOpen(false)} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                閉じる
+              </button>
+            </Modal>
             <button
               onClick={() => signOut()}
               className="text-sm text-red-400 hover:text-red-300"
@@ -98,7 +114,7 @@ export default function Home() {
               id="text"
               value={text}
               onChange={(e) => setText(e.target.value)}
-              className="w-full h-96 p-4 border rounded-md bg-gray-800 text-gray-100 placeholder-gray-400"
+              className="w-full h-[600px] p-4 border rounded-md bg-gray-800 text-gray-100 placeholder-gray-400"
               placeholder="例：会議: 2024/01/08 13:00-14:00 [会議室A]"
             />
           </div>
