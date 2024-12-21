@@ -40,10 +40,16 @@
 
 ## 2. 環境変数の設定
 
-1. プロジェクトルートの`.env.local`ファイルを以下のように設定：
+1. NEXTAUTH_SECRETの生成：
+   ```bash
+   # ターミナルで以下のコマンドを実行し、出力された文字列をコピー
+   openssl rand -base64 32
+   ```
+
+2. プロジェクトルートの`.env.local`ファイルを以下のように設定：
 ```env
 NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-nextauth-secret-key # 適切な値に変更してください
+NEXTAUTH_SECRET=生成した文字列をここに貼り付け # opensslコマンドで生成した値
 
 # Google OAuth credentials
 GOOGLE_CLIENT_ID=your-client-id # 上記で取得した値に置き換え
@@ -52,7 +58,7 @@ GOOGLE_CLIENT_SECRET=your-client-secret # 上記で取得した値に置き換�
 
 ## 3. アプリケーションの起動と動作確認
 
-1. 開発サーバーの起動��
+1. 開発サーバーの起動：
 ```bash
 npm run dev
 ```
@@ -63,4 +69,4 @@ npm run dev
    - 認証を行い、アクセスを許可
    - テキストエリアにイベント情報を入力（例：`会議: 2024/01/08 13:00-14:00 [会議室A]`）
    - 「登録する」ボタンをクリック
-   - Googleカレンダーで登録されたイベントを確認 
+   - Googleカレンダーで登録されたイベントを確認
