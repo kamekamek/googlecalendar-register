@@ -11,9 +11,6 @@ src:
         各コンポーネント間の依存関係を正確に把握する能力に優れているため。
       - api選定理由: このプロジェクトでは外部APIとの連携はバックエンドのGoogle Calendar APIのみであるため、
         フロントエンドのファイルではAPIの選定理由は不要。
-    dependency: []
-    agent: "claude-3-5-sonnet-20241022"
-    api: []
   frontend:
     package.json:
       content: |-
@@ -22,9 +19,11 @@ src:
         - ビルドやテストなどのスクリプトも定義
         - パッケージ管理とプロジェクト設定を含む
         - 主要な依存関係:
-          * React 18.2.0
-          * TypeScript 4.9.5
+          * React 19.0.0
+          * TypeScript 5
           * Axios 1.6.0
+          * react-icons 5.4.0
+          * react-modal 3.16.3
         - スクリプト:
           * start: 開発サーバー起動
           * build: プロダクションビルド
@@ -33,9 +32,6 @@ src:
         - agent選定理由: claude-3-5-sonnet-20241022はパッケージ管理ファイルの生成に優れており、
           依存関係の正確な記述とスクリプトの効率的な定義が可能。
         - api選定理由: このファイルでは外部APIとの連携は定義しないため、APIの選定理由は不要。
-      dependency: []
-      agent: "claude-3-5-sonnet-20241022"
-      api: []
     public:
       index.html:
         content: |-
@@ -45,4 +41,44 @@ src:
           - 言語設定: 英語
           - メタタグ:
             * 文字エンコーディング
-            * レスポンシブデ
+            * レスポンシブデザイン
+    components:
+      EventInput.tsx:
+        content: |-
+          イベント入力コンポーネント
+          - ユーザーがイベント情報を入力するためのテキストエリアを提供
+          - 入力されたテキストを解析してイベントオブジェクトを生成
+      EventList.tsx:
+        content: |-
+          イベントリストコンポーネント
+          - 解析されたイベントをリスト表示
+          - イベントの詳細を表示し、Googleカレンダーに登録するボタンを提供
+      Providers.tsx:
+        content: |-
+          プロバイダーコンポーネント
+          - アプリケーション全体で使用するプロバイダーをラップ
+          - セッション管理やテーマ設定を行う
+  backend:
+    api:
+      auth:
+        route.ts:
+          content: |-
+            認証APIルート
+            - Googleアカウントを使用した認証を提供
+            - JWTを使用してセッションを管理
+      calendar:
+        route.ts:
+          content: |-
+            カレンダーAPIルート
+            - ユーザーのGoogleカレンダーにイベントを登録
+            - イベントの登録結果を返す
+    lib:
+      googleCalendar.ts:
+        content: |-
+          Google Calendar APIとの連携を行うライブラリ
+          - イベントの追加や取得を行う
+      eventParser.ts:
+        content: |-
+          イベント解析ライブラリ
+          - ユーザーが入力したテキストを解析してイベントオブジェクトを生成
+          - 様々なフォーマットに対応
