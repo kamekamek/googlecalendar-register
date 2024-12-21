@@ -1,4 +1,4 @@
-
+# 命令:コミットメッセージを考えて、git commitを適宜実行してください。
 src:
   structure.yaml:
     content: |-

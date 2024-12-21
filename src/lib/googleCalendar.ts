@@ -1,37 +1,42 @@
 import { google } from 'googleapis';
-import { CalendarEvent } from './eventParser';
+import { OAuth2Client } from 'google-auth-library';
 
-export async function addEventsToCalendar(
-  accessToken: string,
-  events: CalendarEvent[]
-) {
-  const oauth2Client = new google.auth.OAuth2();
-  oauth2Client.setCredentials({ access_token: accessToken });
+const oauth2Client = new OAuth2Client(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  process.env.GOOGLE_REDIRECT_URI
+);
 
-  const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+export interface CalendarEvent {
+  summary: string;
+  description?: string;
+  start: {
+    dateTime: string;
+    timeZone: string;
+  };
+  end: {
+    dateTime: string;
+    timeZone: string;
+  };
+  location?: string;
+}
 
-  const results = await Promise.all(
-    events.map(async (event) => {
-      try {
-        const response = await calendar.events.insert({
-          calendarId: 'primary',
-          requestBody: event,
-        });
-        return {
-          success: true,
-          eventId: response.data.id,
-          summary: event.summary,
-        };
-      } catch (error) {
-        console.error('Error adding event:', error);
-        return {
-          success: false,
-          summary: event.summary,
-          error: error instanceof Error ? error.message : 'Unknown error',
-        };
-      }
-    })
-  );
+export async function addEvent(event: CalendarEvent, accessToken: string) {
+  try {
+    oauth2Client.setCredentials({ access_token: accessToken });
+    
+    const calendar = google.calendar({ 
+      version: 'v3', 
+      auth: oauth2Client 
+    });
 
-  return results;
+    const response = await calendar.events.insert({
+      calendarId: 'primary',
+      requestBody: event,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error adding event:', error);
+    throw error;
+  }
 } 

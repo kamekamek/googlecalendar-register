@@ -2,82 +2,130 @@
 
 import { useState } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
-import EventInput from '../../google-calendar-api/src/app/components/EventInput';
-import EventList from '../../google-calendar-api/src/app/components/EventList';
-import { CalendarEvent } from '../lib/eventParser';
-import { addEventsToCalendar } from '../lib/googleCalendar';
+import { CalendarEvent } from '@/lib/googleCalendar';
 
 export default function Home() {
   const { data: session, status } = useSession();
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [text, setText] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
 
-  const handleEventsGenerated = (newEvents: CalendarEvent[]) => {
-    setEvents(newEvents);
-  };
-
-  const handleSubmitToCalendar = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!session?.accessToken) {
-      alert('Googleアカウントでログインしてください');
+      setResult({
+        success: false,
+        message: 'Googleアカウントでログインしてください。',
+      });
       return;
     }
 
-    setIsLoading(true);
+    setLoading(true);
+    setResult(null);
+
     try {
-      const results = await addEventsToCalendar(session.accessToken as string, events);
-      const successCount = results.filter((r) => r.success).length;
-      alert(`${successCount}件のイベントを登録しました`);
-      setEvents([]); // イベントリストをクリア
+      const response = await fetch('/api/calendar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.accessToken}`,
+        },
+        body: JSON.stringify({ text }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        setResult({
+          success: true,
+          message: `${data.events.length}件のイベントを登録しました。`,
+        });
+      } else {
+        setResult({
+          success: false,
+          message: data.error || 'エラーが発生しました。',
+        });
+      }
     } catch (error) {
-      console.error('Error:', error);
-      alert('イベントの登録中にエラーが発生しました');
+      setResult({
+        success: false,
+        message: '通信エラーが発生しました。',
+      });
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  return (
-    <main className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            Googleカレンダー一括登録
-          </h1>
-          {status === 'loading' ? (
-            <p>Loading...</p>
-          ) : session ? (
-            <div className="flex items-center justify-center gap-4">
-              <span className="text-sm text-gray-600">
-                {session.user?.email}としてログイン中
-              </span>
-              <button
-                onClick={() => signOut()}
-                className="text-sm text-red-600 hover:text-red-500"
-              >
-                ログアウト
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => signIn('google')}
-              className="bg-white text-gray-600 px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Googleアカウントでログイン
-            </button>
-          )}
-        </div>
+  if (status === 'loading') {
+    return (
+      <main className="container mx-auto px-4 py-8">
+        <p>Loading...</p>
+      </main>
+    );
+  }
 
-        {session && (
-          <>
-            <EventInput onEventsGenerated={handleEventsGenerated} />
-            <EventList
-              events={events}
-              onSubmit={handleSubmitToCalendar}
-              isLoading={isLoading}
-            />
-          </>
+  return (
+    <main className="container mx-auto px-4 py-8">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Googleカレンダー一括登録</h1>
+        {session ? (
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-600">{session.user?.email}</span>
+            <button
+              onClick={() => signOut()}
+              className="text-sm text-red-600 hover:text-red-500"
+            >
+              ログアウト
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => signIn('google')}
+            className="bg-white text-gray-600 px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-50"
+          >
+            Googleアカウントでログイン
+          </button>
         )}
       </div>
+      
+      {session ? (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="text" className="block text-sm font-medium mb-2">
+              イベントテキスト
+            </label>
+            <textarea
+              id="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              className="w-full h-48 p-2 border rounded-md"
+              placeholder="例：会議: 2024/01/08 13:00-14:00 [会議室A]"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading || !text.trim()}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 disabled:opacity-50"
+          >
+            {loading ? '登録中...' : '登録する'}
+          </button>
+        </form>
+      ) : (
+        <p className="text-center text-gray-600">
+          イベントを登録するには、Googleアカウントでログインしてください。
+        </p>
+      )}
+
+      {result && (
+        <div
+          className={`mt-4 p-4 rounded-md ${
+            result.success ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+          }`}
+        >
+          {result.message}
+        </div>
+      )}
     </main>
   );
 } 
