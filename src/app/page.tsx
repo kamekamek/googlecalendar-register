@@ -110,7 +110,7 @@ export default function Home() {
                     https://www.googleapis.com/auth/calendar.events
                   </code>
                   <p className="mt-1 text-gray-600">
-                    こ���スコープにより、アプリケーションはあなたのGoogleカレンダーにイベントを追加することができます。
+                    このスコープにより、アプリケーションはあなたのGoogleカレンダーにイベントを追加することができます。
                   </p>
                 </li>
               </ul>

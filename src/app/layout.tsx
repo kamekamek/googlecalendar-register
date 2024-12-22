@@ -6,7 +6,10 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'Googleカレンダー一括登録',
-  description: 'テキストからイベントを解析してGoogleカレンダーに一括登録するアプリケーション',
+  description: 'テキストからGoogleカレンダーに一括登録するツール',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
