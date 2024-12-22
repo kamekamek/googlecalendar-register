@@ -1,6 +1,6 @@
 'use client';
 
-import { CalendarEvent } from '../../../../src/lib/eventParser';
+import { CalendarEvent } from '@/lib/eventParser';
 import { format, parseISO } from 'date-fns';
 import { ja } from 'date-fns/locale';
 
