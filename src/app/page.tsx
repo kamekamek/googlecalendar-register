@@ -12,14 +12,12 @@ export default function Home() {
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
-  const [hasAgreedToTerms, setHasAgreedToTerms] = useState(false);
 
   const handleLoginClick = () => {
     setIsTermsModalOpen(true);
   };
 
   const handleAgreeAndLogin = () => {
-    setHasAgreedToTerms(true);
     setIsTermsModalOpen(false);
     signIn('google');
   };
