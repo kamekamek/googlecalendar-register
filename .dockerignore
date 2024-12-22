@@ -1,0 +1,25 @@
+# バージョン管理
+.git
+.gitignore
+
+# 依存関係
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# ビルド
+.next
+out
+build
+
+# 環境変数
+.env*
+!.env.example
+
+# その他
+.DS_Store
+README.md
+*.pem
+.vscode
+.idea 
