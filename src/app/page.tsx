@@ -11,6 +11,18 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string } | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTermsModalOpen, setIsTermsModalOpen] = useState(false);
+  const [hasAgreedToTerms, setHasAgreedToTerms] = useState(false);
+
+  const handleLoginClick = () => {
+    setIsTermsModalOpen(true);
+  };
+
+  const handleAgreeAndLogin = () => {
+    setHasAgreedToTerms(true);
+    setIsTermsModalOpen(false);
+    signIn('google');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,37 +83,112 @@ export default function Home() {
     <main className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Googleカレンダー一括登録</h1>
-        {session ? (
-          <div className="flex items-center gap-4">
-            <FaEnvelope className="text-gray-100 cursor-pointer" onClick={() => setIsModalOpen(true)} />
-            <Modal
-              isOpen={isModalOpen}
-              onRequestClose={() => setIsModalOpen(false)}
-              contentLabel="Email Modal"
-              className="bg-white p-4 rounded-md shadow-lg"
-              overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
-            >
-              <h2 className="text-lg font-bold mb-2">メールアドレス</h2>
-              <p className="text-gray-800">{session.user?.email}</p>
-              <button onClick={() => setIsModalOpen(false)} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-                閉じる
-              </button>
-            </Modal>
-            <button
-              onClick={() => signOut()}
-              className="text-sm text-red-400 hover:text-red-300"
-            >
-              ログアウト
-            </button>
-          </div>
-        ) : (
+        <div className="flex items-center gap-4">
           <button
-            onClick={() => signIn('google')}
-            className="bg-white text-gray-600 px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-50"
+            onClick={() => setIsTermsModalOpen(true)}
+            className="text-sm text-gray-400 hover:text-gray-300"
           >
-            Googleアカウントでログイン
+            利用規約・プライバシーポリシー
           </button>
-        )}
+          <Modal
+            isOpen={isTermsModalOpen}
+            onRequestClose={() => setIsTermsModalOpen(false)}
+            contentLabel="Terms and Privacy"
+            className="bg-white p-8 rounded-md shadow-lg max-w-2xl mx-4 max-h-[80vh] overflow-y-auto"
+            overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+          >
+            <h2 className="text-2xl font-bold mb-6">利用規約・プライバシーポリシー</h2>
+            
+            <section className="mb-8">
+              <h3 className="text-xl font-bold mb-4">1. APIスコープについて</h3>
+              <p className="mb-4">本アプリケーションは、以下のGoogle Calendar APIスコープを使用します：</p>
+              <ul className="list-disc pl-6 mb-4">
+                <li className="mb-2">
+                  <code className="bg-gray-100 px-2 py-1 rounded">
+                    https://www.googleapis.com/auth/calendar.events
+                  </code>
+                  <p className="mt-1 text-gray-600">
+                    このスコープにより、アプリケーションはあなたのGoogleカレンダーにイベントを追加することができます。
+                  </p>
+                </li>
+              </ul>
+            </section>
+
+            <section className="mb-8">
+              <h3 className="text-xl font-bold mb-4">2. データの取り扱いについて</h3>
+              <ul className="list-disc pl-6 mb-4">
+                <li className="mb-2">入力されたイベント情報は、Googleカレンダーへの登録にのみ使用されます。</li>
+                <li className="mb-2">当アプリケーションでは、入力データの保存や他目的での利用は一切行いません。</li>
+                <li className="mb-2">認証情報（アクセストークン）は、セッション中のみ一時的に保持されます。</li>
+              </ul>
+            </section>
+
+            <section className="mb-8">
+              <h3 className="text-xl font-bold mb-4">3. 免責事項</h3>
+              <p className="mb-4">
+                本アプリケーションの使用により生じたいかなる損害についても、開発者は責任を負いかねます。
+                イベントの登録内容は、ご自身で確認いただくようお願いいたします。
+              </p>
+            </section>
+
+            <div className="flex gap-4">
+              <button
+                onClick={() => setIsTermsModalOpen(false)}
+                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400"
+              >
+                キャンセル
+              </button>
+              {!session && (
+                <button
+                  onClick={handleAgreeAndLogin}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                >
+                  同意してログイン
+                </button>
+              )}
+              {session && (
+                <button
+                  onClick={() => setIsTermsModalOpen(false)}
+                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                >
+                  閉じる
+                </button>
+              )}
+            </div>
+          </Modal>
+
+          {session ? (
+            <div className="flex items-center gap-4">
+              <FaEnvelope className="text-gray-100 cursor-pointer" onClick={() => setIsModalOpen(true)} />
+              <Modal
+                isOpen={isModalOpen}
+                onRequestClose={() => setIsModalOpen(false)}
+                contentLabel="Email Modal"
+                className="bg-white p-4 rounded-md shadow-lg"
+                overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+              >
+                <h2 className="text-lg font-bold mb-2">メールアドレス</h2>
+                <p className="text-gray-800">{session.user?.email}</p>
+                <button onClick={() => setIsModalOpen(false)} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                  閉じる
+                </button>
+              </Modal>
+              <button
+                onClick={() => signOut()}
+                className="text-sm text-red-400 hover:text-red-300"
+              >
+                ログアウト
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={handleLoginClick}
+              className="bg-white text-gray-600 px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-50"
+            >
+              Googleアカウントでログイン
+            </button>
+          )}
+        </div>
       </div>
       
       {session ? (
