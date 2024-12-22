@@ -5,6 +5,10 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import { FaEnvelope } from 'react-icons/fa';
 import Modal from 'react-modal';
 
+if (typeof window !== 'undefined') {
+  Modal.setAppElement('#__next');
+}
+
 export default function Home() {
   const { data: session, status } = useSession();
   const [text, setText] = useState('');
@@ -95,37 +99,37 @@ export default function Home() {
             className="bg-white p-8 rounded-md shadow-lg max-w-2xl mx-4 max-h-[80vh] overflow-y-auto"
             overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
           >
-            <h2 className="text-2xl font-bold mb-6">利用規約・プライバシーポリシー</h2>
+            <h2 className="text-2xl font-bold mb-6 text-gray-900">利用規約・プライバシーポリシー</h2>
             
             <section className="mb-8">
-              <h3 className="text-xl font-bold mb-4">1. APIスコープについて</h3>
-              <p className="mb-4">本アプリケーションは、以下のGoogle Calendar APIスコープを使用します：</p>
+              <h3 className="text-xl font-bold mb-4 text-gray-900">1. APIスコープについて</h3>
+              <p className="mb-4 text-gray-700">本アプリケーションは、以下のGoogle Calendar APIスコープを使用します：</p>
               <ul className="list-disc pl-6 mb-4">
                 <li className="mb-2">
-                  <code className="bg-gray-100 px-2 py-1 rounded">
+                  <code className="bg-gray-100 px-2 py-1 rounded text-gray-900">
                     https://www.googleapis.com/auth/calendar.events
                   </code>
                   <p className="mt-1 text-gray-600">
-                    このスコープにより、アプリケーションはあなたのGoogleカレンダーにイベントを追加することができます。
+                    こ���スコープにより、アプリケーションはあなたのGoogleカレンダーにイベントを追加することができます。
                   </p>
                 </li>
               </ul>
             </section>
 
             <section className="mb-8">
-              <h3 className="text-xl font-bold mb-4">2. データの取り扱いについて</h3>
+              <h3 className="text-xl font-bold mb-4 text-gray-900">2. データの取り扱いについて</h3>
               <ul className="list-disc pl-6 mb-4">
-                <li className="mb-2">入力されたイベント情報は、Googleカレンダーへの登録にのみ使用されます。</li>
-                <li className="mb-2">当アプリケーションでは、入力データの保存や他目的での利用は一切行いません。</li>
-                <li className="mb-2">認証情報（アクセストークン）は、セッション中のみ一時的に保持されます。</li>
+                <li className="mb-2 text-gray-700">入力されたイベント情報は、Googleカレンダーへの登録にのみ使用されます。</li>
+                <li className="mb-2 text-gray-700">当アプリケーションでは、入力データの保存や他目的での利用は一切行いません。</li>
+                <li className="mb-2 text-gray-700">認証情報（アクセストークン）は、セッション中のみ一時的に保持されます。</li>
               </ul>
             </section>
 
             <section className="mb-8">
-              <h3 className="text-xl font-bold mb-4">3. 免責事項</h3>
-              <p className="mb-4">
+              <h3 className="text-xl font-bold mb-4 text-gray-900">3. 免責事項</h3>
+              <p className="mb-4 text-gray-700">
                 本アプリケーションの使用により生じたいかなる損害についても、開発者は責任を負いかねます。
-                イベントの登録内容は、ご自身で確認いただくようお願いいたします。
+                イベントの登録内容は、��自身で確認いただくようお願いいたします。
               </p>
             </section>
 
@@ -165,8 +169,8 @@ export default function Home() {
                 className="bg-white p-4 rounded-md shadow-lg"
                 overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
               >
-                <h2 className="text-lg font-bold mb-2">メールアドレス</h2>
-                <p className="text-gray-800">{session.user?.email}</p>
+                <h2 className="text-lg font-bold mb-2 text-gray-900">メールアドレス</h2>
+                <p className="text-gray-700">{session.user?.email}</p>
                 <button onClick={() => setIsModalOpen(false)} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
                   閉じる
                 </button>
