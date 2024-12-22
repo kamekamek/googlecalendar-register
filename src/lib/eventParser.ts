@@ -1,5 +1,7 @@
 import { CalendarEvent } from './googleCalendar';
 
+export type { CalendarEvent };
+
 export function parseEvents(text: string): CalendarEvent[] {
   // テキストを行ごとに分割
   const lines = text.split('\n').filter(line => line.trim());

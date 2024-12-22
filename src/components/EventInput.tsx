@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { parseEvents, CalendarEvent } from '../../../../src/lib/eventParser';
+import { parseEvents, CalendarEvent } from '@/lib/eventParser';
 
 interface EventInputProps {
   onEventsGenerated: (events: CalendarEvent[]) => void;
