@@ -48,6 +48,33 @@ npm run dev
 4. 「登録する」ボタンをクリック
 5. Googleカレンダーで登録されたイベントを確認
 
+## Vercelへのデプロイ手順
+
+1. Vercelアカウントの作成：
+   - [Vercel](https://vercel.com)にアクセスし、アカウントを作成（GitHubアカウントでの登録推奨）
+
+2. プロジェクトのデプロイ：
+   - Vercelダッシュボードから「New Project」をクリック
+   - GitHubリポジトリを連携し、対象のリポジトリを選択
+   - 「Import」をクリック
+
+3. 環境変数の設定：
+   - デプロイ設定画面で「Environment Variables」セクションを開く
+   - `.env.local`と同じ環境変数を設定
+   - 以下の変数を必ず設定：
+     - `GOOGLE_CLIENT_ID`
+     - `GOOGLE_CLIENT_SECRET`
+     - `NEXTAUTH_SECRET`
+     - `NEXTAUTH_URL`（デプロイ後のドメインを設定）
+
+4. デプロイの実行：
+   - 「Deploy」ボタンをクリック
+   - デプロイ完了後、割り当てられたドメインでアプリケーションにアクセス可能
+
+5. Google Cloud Consoleの設定更新：
+   - OAuth 2.0クライアントIDの承認済みリダイレクトURIに
+   - `https://あなたのドメイン/api/auth/callback/google`を追加
+
 ## ライセンス
 
 MIT License
