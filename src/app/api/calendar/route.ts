@@ -2,10 +2,11 @@ import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { parseEvents } from '@/lib/eventParser';
 import { addEvent } from '@/lib/googleCalendar';
+import { NextRequest } from 'next/server';
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const token = await getToken({ req: request as any });
+    const token = await getToken({ req: request });
     
     if (!token?.accessToken) {
       return NextResponse.json(

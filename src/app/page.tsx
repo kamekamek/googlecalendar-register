@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
-import { CalendarEvent } from '@/lib/googleCalendar';
 import { FaEnvelope } from 'react-icons/fa';
 import Modal from 'react-modal';
 
