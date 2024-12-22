@@ -16,8 +16,11 @@
 - NextAuth.js
 - Google Calendar API
 - Tailwind CSS
+- Docker
 
 ## セットアップ
+
+### 通常のセットアップ
 
 1. 依存関係のインストール：
 ```bash
@@ -35,6 +38,10 @@ npm install
 ```bash
 npm run dev
 ```
+
+### Dockerを使用したセットアップ
+
+Dockerを使用してアプリケーションを実行する場合は、[Dockerガイド](docs/docker-guide.md)を参照してください。
 
 ## 使用方法
 
