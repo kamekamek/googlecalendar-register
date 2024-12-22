@@ -2,7 +2,7 @@ import NextAuth from 'next-auth/next';
 import type { AuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
-export const authOptions: AuthOptions = {
+const authOptions: AuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GoogleProvider({
