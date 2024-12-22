@@ -6,7 +6,7 @@ import { FaEnvelope } from 'react-icons/fa';
 import Modal from 'react-modal';
 
 if (typeof window !== 'undefined') {
-  Modal.setAppElement('#__next');
+  Modal.setAppElement('body');
 }
 
 export default function Home() {
@@ -129,7 +129,7 @@ export default function Home() {
               <h3 className="text-xl font-bold mb-4 text-gray-900">3. 免責事項</h3>
               <p className="mb-4 text-gray-700">
                 本アプリケーションの使用により生じたいかなる損害についても、開発者は責任を負いかねます。
-                イベントの登録内容は、��自身で確認いただくようお願いいたします。
+                イベントの登録内容は、自身で確認いただくようお願いいたします。
               </p>
             </section>
 
