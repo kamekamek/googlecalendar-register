@@ -49,6 +49,7 @@ export default function Home() {
         });
       }
     } catch (error) {
+      console.error('Error submitting event:', error);
       setResult({
         success: false,
         message: '通信エラーが発生しました。',
