@@ -1,6 +1,6 @@
 'use client';
 
-import { CalendarEvent } from '@/lib/eventParser';
+import { CalendarEvent } from '@/lib/googleCalendar';
 import { format, parseISO } from 'date-fns';
 import { ja } from 'date-fns/locale';
 
@@ -30,7 +30,7 @@ export default function EventList({ events, onSubmit, isLoading = false }: Event
           >
             <h3 className="font-medium text-gray-900">{event.summary}</h3>
             <p className="text-sm text-gray-500">
-              {formatDateTime(event.start.dateTime)} - {formatDateTime(event.end.dateTime)}
+              {formatDateTime(event.start.dateTime ?? '')} - {formatDateTime(event.end.dateTime ?? '')}
             </p>
             {event.description && (
               <a
