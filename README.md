@@ -11,7 +11,7 @@
 
 ### バックエンド
 - Next.js API Routes
-- OpenAI API (GPT-3.5-turbo)
+- OpenAI API (GPT-4o-mini)
 - Google Calendar API
 - NextAuth.js（セッション管理）
 
