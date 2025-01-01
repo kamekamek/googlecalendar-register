@@ -11,11 +11,13 @@ export interface CalendarEvent {
   summary: string;
   description?: string;
   start: {
-    dateTime: string;
+    date?: string;
+    dateTime?: string;
     timeZone: string;
   };
   end: {
-    dateTime: string;
+    date?: string;
+    dateTime?: string;
     timeZone: string;
   };
   location?: string;
@@ -34,9 +36,11 @@ export async function addEvent(event: CalendarEvent, accessToken: string) {
       calendarId: 'primary',
       requestBody: event,
     });
+    
+    console.log('イベントが正常に追加されました:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error adding event:', error);
+    console.error('イベントの追加に失敗しました:', error);
     throw error;
   }
 } 
