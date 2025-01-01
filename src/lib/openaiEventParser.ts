@@ -1,6 +1,5 @@
 import { OpenAI } from 'openai';
 import { CalendarEvent } from './googleCalendar';
-import { format, addHours, parseISO } from 'date-fns';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,

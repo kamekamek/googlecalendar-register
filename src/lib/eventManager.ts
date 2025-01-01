@@ -1,5 +1,5 @@
 import { extractEventInfo } from './openaiEventParser';
-import { addEvent, CalendarEvent } from './googleCalendar';
+import { addEvent } from './googleCalendar';
 
 export async function processEvents(eventText: string, accessToken: string): Promise<void> {
   try {
