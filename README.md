@@ -1,30 +1,64 @@
-# Googleカレンダー一括登録アプリケーション
-
-テキストからイベントを解析し、Googleカレンダーに一括登録するWebアプリケーションです。
-
-## 機能
-
-- Googleアカウントでのログイン認証
-- テキストからのイベント情報の解析
-- Googleカレンダーへの一括登録
-- 登録結果の表示とエラーハンドリング
+# Google Calendar 一括登録アプリケーション
 
 ## 技術スタック
 
+### フロントエンド
 - Next.js 14
-- TypeScript
-- NextAuth.js
+- TypeScript 5.x
+- TailwindCSS
+- React Icons
+- NextAuth.js（認証）
+
+### バックエンド
+- Next.js API Routes
+- OpenAI API (GPT-3.5-turbo)
 - Google Calendar API
-- Tailwind CSS
+- NextAuth.js（セッション管理）
+
+### インフラ・開発環境
 - Docker
+- Docker Compose
+- Vercel（デプロイ）
+- ESLint（コード品質）
+- Prettier（コードフォーマット）
 
-## セットアップ
+### 主要なライブラリ
+- date-fns（日付処理）
+- axios（APIリクエスト）
+- googleapis（Google API SDK）
 
-### 通常のセットアップ
+## 概要
+複数の予定をテキスト形式で入力し、Google Calendarに一括で登録できるアプリケーションです。
+OpenAI APIを使用して柔軟なテキスト解析を行い、様々な形式の予定入力に対応しています。
 
-1. 依存関係のインストール：
-```bash
-npm install
+## 機能
+- 複数予定の一括登録
+- 柔軟なテキスト形式の解析
+- Google認証による安全な連携
+- 並列処理による高速な登録
+- エラーハンドリングとステータス表示
+
+## 入力例
+
+以下のような形式のテキストを入力できます：
+
+```
+1/15(月) 19:00〜21:00 新年会＠渋谷
+https://example.com/event1
+※会費：5000円
+
+1/20 スキー旅行 @野沢温泉スキー場
+https://example.com/event2
+※集合：新宿駅8:00
+※持ち物：防寒具、着替え
+
+2/1(木) 13:00-15:00 四半期進捗報告会
+https://example.com/event3
+※資料は前日までに共有をお願いします
+
+2/14 バレンタインパーティー @六本木
+https://example.com/event4
+※プレゼント交換あり（予算3000円）
 ```
 
 2. Google Cloud Consoleでの設定：
