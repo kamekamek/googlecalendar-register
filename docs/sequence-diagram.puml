@@ -1,0 +1,44 @@
+```plantuml
+@startuml
+title 複数イベントの処理フロー
+
+actor Client
+participant EventManager
+participant OpenAIParser
+participant GoogleCalendar
+participant "OpenAI API" as OpenAI
+participant "Google Calendar API" as GCalAPI
+
+Client -> EventManager: processEvents(eventText, accessToken)
+note over EventManager: イベントテキストの処理開始
+
+EventManager -> OpenAIParser: extractEventInfo(eventText)
+OpenAIParser -> OpenAI: chat.completions.create()
+note over OpenAI: 複数イベントを\nJSON形式で抽出
+OpenAI --> OpenAIParser: events配列を返却
+OpenAIParser --> EventManager: CalendarEvent[]を返却
+
+note over EventManager: Promise.allで並列処理開始
+
+par 並列処理：各イベントの登録
+    EventManager -> GoogleCalendar: addEvent(event1, accessToken)
+    GoogleCalendar -> GCalAPI: events.insert()
+    GCalAPI --> GoogleCalendar: response
+    GoogleCalendar --> EventManager: result1
+else
+    EventManager -> GoogleCalendar: addEvent(event2, accessToken)
+    GoogleCalendar -> GCalAPI: events.insert()
+    GCalAPI --> GoogleCalendar: response
+    GoogleCalendar --> EventManager: result2
+else
+    EventManager -> GoogleCalendar: addEvent(event3, accessToken)
+    GoogleCalendar -> GCalAPI: events.insert()
+    GCalAPI --> GoogleCalendar: response
+    GoogleCalendar --> EventManager: result3
+end
+
+note over EventManager: 処理結果の集計
+EventManager --> Client: 処理結果のサマリー
+
+@enduml
+```
