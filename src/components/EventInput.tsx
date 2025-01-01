@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { parseEvents, CalendarEvent } from '@/lib/eventParser';
+import { extractEventInfo } from '@/lib/openaiEventParser';
+import { CalendarEvent } from '@/lib/googleCalendar';
 
 interface EventInputProps {
   onEventsGenerated: (events: CalendarEvent[]) => void;
@@ -10,9 +11,9 @@ interface EventInputProps {
 export default function EventInput({ onEventsGenerated }: EventInputProps) {
   const [inputText, setInputText] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const events = parseEvents(inputText);
+    const events = await extractEventInfo(inputText);
     onEventsGenerated(events);
   };
 
