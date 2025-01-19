@@ -16,16 +16,43 @@ interface OpenAIEventResponse {
   }[];
 }
 
-export async function extractEventInfo(userInput: string): Promise<CalendarEvent[]> {
-  try {
-    const currentYear = new Date().getFullYear();
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      response_format: { type: "json_object" },
-      messages: [
-        {
-          role: "system",
-          content: `あなたはイベントの日時情報を抽出する日本語特化型アシスタントです。
+// テキストを複数の塊に分割する関数
+function splitTextIntoChunks(text: string): string[] {
+  // 空行で分割
+  const lines = text.split('\n');
+  const chunks: string[] = [];
+  let currentChunk: string[] = [];
+
+  for (const line of lines) {
+    currentChunk.push(line);
+    
+    // 空行を検出したら、または4つのイベントが含まれていたら新しいチャンクを開始
+    if (line.trim() === '' || currentChunk.filter(l => l.match(/^\d{1,2}\/\d{1,2}/)).length >= 4) {
+      if (currentChunk.length > 1) {  // 空の塊を避ける
+        chunks.push(currentChunk.join('\n'));
+      }
+      currentChunk = [];
+    }
+  }
+
+  // 最後の塊を追加
+  if (currentChunk.length > 0) {
+    chunks.push(currentChunk.join('\n'));
+  }
+
+  return chunks;
+}
+
+// 1つのチャンクからイベントを抽出する関数
+async function extractEventsFromChunk(chunk: string): Promise<CalendarEvent[]> {
+  const currentYear = new Date().getFullYear();
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    response_format: { type: "json_object" },
+    messages: [
+      {
+        role: "system",
+        content: `あなたはイベントの日時情報を抽出する日本語特化型アシスタントです。
 複数の予定が含まれる入力を解析し、JSONを出力してください。
 
 入力例：
@@ -34,9 +61,6 @@ export async function extractEventInfo(userInput: string): Promise<CalendarEvent
 https://example.com
 
 1/12(日) 18:00〜20:00 飲み会←更新New!!!
-https://example.com
-
-1/25(土) 野球観戦
 https://example.com
 """
 
@@ -77,49 +101,62 @@ https://example.com
    - 予定の後に続くURLは、その予定のdescriptionに含める
 
 5. タイムゾーン：
-   - 特に指定がない限り "Asia/Tokyo" を使用
+   - 特に指定がない限り "Asia/Tokyo" を使用`
+      },
+      {
+        role: "user",
+        content: chunk
+      }
+    ]
+  });
 
-6. 複数予定の区切り：
-   - 空行で区切られた予定を別々の予定として認識
-   - URLや補足情報（※で始まる行）は、直前の予定に関連付ける`
-        },
-        {
-          role: "user",
-          content: userInput
+  const response = completion.choices[0].message.content;
+  if (!response) {
+    throw new Error('OpenAI APIからの応答が空です');
+  }
+
+  const eventInfo = JSON.parse(response) as OpenAIEventResponse;
+  
+  // CalendarEventフォーマットに変換
+  return eventInfo.events.map(event => ({
+    summary: event.summary,
+    description: event.description,
+    start: event.all_day
+      ? {
+          date: event.start_datetime.split('T')[0],
+          timeZone: event.timezone
         }
-      ]
-    });
+      : {
+          dateTime: event.start_datetime,
+          timeZone: event.timezone
+        },
+    end: event.all_day
+      ? {
+          date: event.end_datetime.split('T')[0],
+          timeZone: event.timezone
+        }
+      : {
+          dateTime: event.end_datetime,
+          timeZone: event.timezone
+        }
+  }));
+}
 
-    const response = completion.choices[0].message.content;
-    if (!response) {
-      throw new Error('OpenAI APIからの応答が空です');
-    }
+export async function extractEventInfo(userInput: string): Promise<CalendarEvent[]> {
+  try {
+    // テキストを複数の塊に分割
+    const chunks = splitTextIntoChunks(userInput);
+    console.log(`Debug: Split text into ${chunks.length} chunks`);
 
-    const eventInfo = JSON.parse(response) as OpenAIEventResponse;
-    
-    // CalendarEventフォーマットに変換
-    return eventInfo.events.map(event => ({
-      summary: event.summary,
-      description: event.description,
-      start: event.all_day
-        ? {
-            date: event.start_datetime.split('T')[0],
-            timeZone: event.timezone
-          }
-        : {
-            dateTime: event.start_datetime,
-            timeZone: event.timezone
-          },
-      end: event.all_day
-        ? {
-            date: event.end_datetime.split('T')[0],
-            timeZone: event.timezone
-          }
-        : {
-            dateTime: event.end_datetime,
-            timeZone: event.timezone
-          }
-    }));
+    // 各チャンクを並行して処理
+    const chunkPromises = chunks.map(chunk => extractEventsFromChunk(chunk));
+    const chunkResults = await Promise.all(chunkPromises);
+
+    // 結果を1つの配列に統合
+    const allEvents = chunkResults.flat();
+    console.log(`Debug: Extracted ${allEvents.length} events in total`);
+
+    return allEvents;
   } catch (error) {
     console.error('イベント情報の抽出に失敗しました:', error);
     throw error;

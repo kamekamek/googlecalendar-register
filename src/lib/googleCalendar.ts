@@ -24,17 +24,16 @@ export interface CalendarEvent {
   location?: string;
 }
 
+// カレンダークライアントを初期化する関数
+function initializeCalendarClient(accessToken: string) {
+  oauth2Client.setCredentials({ access_token: accessToken });
+  return google.calendar({ version: 'v3', auth: oauth2Client });
+}
+
 export async function addEvent(event: CalendarEvent, accessToken: string) {
   try {
-    console.log('Debug: Setting credentials with access token:', accessToken.substring(0, 10) + '...');
-    oauth2Client.setCredentials({ access_token: accessToken });
+    const calendar = initializeCalendarClient(accessToken);
     
-    console.log('Debug: Creating calendar client...');
-    const calendar = google.calendar({ 
-      version: 'v3', 
-      auth: oauth2Client 
-    });
-
     console.log('Debug: Attempting to insert event:', JSON.stringify(event, null, 2));
     const response = await calendar.events.insert({
       calendarId: 'primary',
@@ -54,4 +53,26 @@ export async function addEvent(event: CalendarEvent, accessToken: string) {
     }
     throw error;
   }
+}
+
+// 複数のイベントを一括で追加する関数
+export async function addEvents(events: CalendarEvent[], accessToken: string) {
+  const calendar = initializeCalendarClient(accessToken);
+  
+  const promises = events.map(event => 
+    calendar.events.insert({
+      calendarId: 'primary',
+      requestBody: event,
+    }).then(response => ({
+      success: true,
+      data: response.data,
+      summary: event.summary
+    })).catch(error => ({
+      success: false,
+      error: error instanceof GaxiosError ? error.message : '不明なエラー',
+      summary: event.summary
+    }))
+  );
+
+  return Promise.all(promises);
 } 

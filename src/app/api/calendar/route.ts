@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 import { extractEventInfo } from '@/lib/openaiEventParser';
-import { addEvent } from '@/lib/googleCalendar';
+import { addEvents } from '@/lib/googleCalendar';
 import { NextRequest } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -39,25 +39,7 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(`Debug: Found ${events.length} events, attempting to add them...`);
-    const results = await Promise.all(
-      events.map(async (event) => {
-        try {
-          const result = await addEvent(event, token.accessToken as string);
-          return { 
-            success: true, 
-            eventId: result.id,
-            summary: event.summary 
-          };
-        } catch (error) {
-          console.error('Error adding event:', error);
-          return { 
-            success: false, 
-            error: 'イベントの登録に失敗しました。',
-            summary: event.summary 
-          };
-        }
-      })
-    );
+    const results = await addEvents(events, token.accessToken as string);
 
     const successCount = results.filter((r) => r.success).length;
     const failureCount = results.length - successCount;
