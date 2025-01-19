@@ -70,3 +70,42 @@ npm run dev
    - テキストエリアにイベント情報を入力（例：`会議: 2024/01/08 13:00-14:00 [会議室A]`）
    - 「登録する」ボタンをクリック
    - Googleカレンダーで登録されたイベントを確認
+
+## 4. Next.js App RouterでのAuth.js（NextAuth.js）の設定
+
+Next.js 13以降のApp Routerを使用する場合、Auth.jsの設定は以下の構造に従う必要があります：
+
+### 4.1 ファイル構造
+```
+src/app/api/auth/[...nextauth]/
+├── auth.ts    # 認証設定を含むファイル
+└── route.ts   # APIルートハンドラー
+```
+
+### 4.2 認証設定ファイル（auth.ts）
+認証に関する設定は`auth.ts`ファイルに分離します：
+
+```typescript
+import type { AuthOptions } from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
+
+export const authOptions: AuthOptions = {
+  // 認証設定をここに記述
+};
+```
+
+### 4.3 ルートハンドラー（route.ts）
+APIルートハンドラーは`route.ts`ファイルにシンプルな形で実装します：
+
+```typescript
+import NextAuth from 'next-auth/next';
+import { authOptions } from './auth';
+
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };
+```
+
+### 4.4 注意点
+- App Routerでは、認証設定（`authOptions`）を直接`route.ts`ファイルでエクスポートすることはできません
+- 認証設定は必ず別ファイル（`auth.ts`）に分離する必要があります
+- `route.ts`ファイルでは、GETとPOSTハンドラーのみをエクスポートします
