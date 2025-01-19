@@ -6,14 +6,18 @@ import { NextRequest } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('Debug: Getting token from request...');
     const token = await getToken({ req: request });
     
+    console.log('Debug: Token received:', token ? 'Token exists' : 'No token');
     if (!token?.accessToken) {
+      console.log('Debug: No access token found in token object');
       return NextResponse.json(
         { error: '認証が必要です。' },
         { status: 401 }
       );
     }
+    console.log('Debug: Access token found:', token.accessToken.substring(0, 10) + '...');
 
     const { text } = await request.json();
 
@@ -24,7 +28,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // OpenAI APIを使用してイベント情報を抽出
+    console.log('Debug: Extracting event info from text...');
     const events = await extractEventInfo(text);
 
     if (events.length === 0) {
@@ -34,6 +38,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    console.log(`Debug: Found ${events.length} events, attempting to add them...`);
     const results = await Promise.all(
       events.map(async (event) => {
         try {
@@ -57,6 +62,8 @@ export async function POST(request: NextRequest) {
     const successCount = results.filter((r) => r.success).length;
     const failureCount = results.length - successCount;
 
+    console.log(`Debug: Added ${successCount} out of ${events.length} events successfully`);
+
     if (failureCount > 0) {
       return NextResponse.json(
         {
@@ -72,9 +79,9 @@ export async function POST(request: NextRequest) {
       message: `${successCount}件のイベントを登録しました。`,
     });
   } catch (error) {
-    console.error('Error processing request:', error);
+    console.error('API error:', error);
     return NextResponse.json(
-      { error: 'サーバーエラーが発生しました。' },
+      { error: error instanceof Error ? error.message : '不明なエラー' },
       { status: 500 }
     );
   }
