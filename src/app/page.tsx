@@ -86,12 +86,14 @@ export default function Home() {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Googleカレンダー一括登録</h1>
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => setIsTermsModalOpen(true)}
+          <a
+            href="/privacy-policy"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-sm text-gray-400 hover:text-gray-300"
           >
-            利用規約・プライバシーポリシー
-          </button>
+            Privacy Policy
+          </a>
           <Modal
             isOpen={isTermsModalOpen}
             onRequestClose={() => setIsTermsModalOpen(false)}
@@ -99,37 +101,40 @@ export default function Home() {
             className="bg-white p-8 rounded-md shadow-lg max-w-2xl mx-4 max-h-[80vh] overflow-y-auto"
             overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
           >
-            <h2 className="text-2xl font-bold mb-6 text-gray-900">利用規約・プライバシーポリシー</h2>
+            <h2 className="text-2xl font-bold mb-6 text-gray-900">Terms of Service</h2>
             
             <section className="mb-8">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">1. APIスコープについて</h3>
-              <p className="mb-4 text-gray-700">本アプリケーションは、以下のGoogle Calendar APIスコープを使用します：</p>
+              <h3 className="text-xl font-bold mb-4 text-gray-900">1. API Scope</h3>
+              <p className="mb-4 text-gray-700">This application uses the following Google Calendar API scope:</p>
               <ul className="list-disc pl-6 mb-4">
                 <li className="mb-2">
                   <code className="bg-gray-100 px-2 py-1 rounded text-gray-900">
                     https://www.googleapis.com/auth/calendar.events
                   </code>
                   <p className="mt-1 text-gray-600">
-                    このスコープにより、アプリケーションはあなたのGoogleカレンダーにイベントを追加することができます。
+                    This scope allows the application to add events to your Google Calendar.
                   </p>
                 </li>
               </ul>
             </section>
 
             <section className="mb-8">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">2. データの取り扱いについて</h3>
-              <ul className="list-disc pl-6 mb-4">
-                <li className="mb-2 text-gray-700">入力されたイベント情報は、Googleカレンダーへの登録にのみ使用されます。</li>
-                <li className="mb-2 text-gray-700">当アプリケーションでは、入力データの保存や他目的での利用は一切行いません。</li>
-                <li className="mb-2 text-gray-700">認証情報（アクセストークン）は、セッション中のみ一時的に保持されます。</li>
-              </ul>
-            </section>
-
-            <section className="mb-8">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">3. 免責事項</h3>
+              <h3 className="text-xl font-bold mb-4 text-gray-900">2. Disclaimer</h3>
               <p className="mb-4 text-gray-700">
-                本アプリケーションの使用により生じたいかなる損害についても、開発者は責任を負いかねます。
-                イベントの登録内容は、自身で確認いただくようお願いいたします。
+                The developer is not responsible for any damages caused by using this application.
+                Please verify the event details before registration.
+              </p>
+              <p className="mb-4 text-gray-700">
+                For more information about how we handle your data, please read our{' '}
+                <a
+                  href="/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-500 hover:text-blue-600"
+                >
+                  Privacy Policy
+                </a>
+                .
               </p>
             </section>
 
