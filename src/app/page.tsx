@@ -87,7 +87,15 @@ export default function Home() {
       <BackgroundGradient />
       <main className="container mx-auto px-4 py-8 relative">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Googleカレンダー一括登録</h1>
+          <div>
+            <h1 className="text-3xl font-bold mb-4">Googleカレンダー一括登録</h1>
+            <div className="text-gray-100 space-y-2">
+              <p>📝 入力欄に日付・時刻・予定を文章で入力するだけで簡単に予定が登録できます！</p>
+              <p>📅 複数の予定を登録する場合は、行間を1行開けて入力してください。</p>
+              <p className="text-yellow-400">※ 日付は2024/1/8、2024/01/08、1/8など柔軟に対応</p>
+              <p className="text-yellow-400">※ 時刻は13:00-14:00、13時から14時、13:00～14:00など柔軟に対応</p>
+            </div>
+          </div>
           <div className="flex items-center gap-4">
             <a
               href="/privacy-policy"
