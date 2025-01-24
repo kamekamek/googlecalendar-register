@@ -165,27 +165,48 @@ export default function Home() {
           </Modal>
 
           {session ? (
-            <div className="flex items-center gap-4">
-              <FaEnvelope className="text-gray-100 cursor-pointer" onClick={() => setIsModalOpen(true)} />
+            <div className="flex items-center gap-4 flex-wrap sm:flex-nowrap">
+              <div className="flex items-center gap-2 order-1 sm:order-none">
+                {session.user?.image && (
+                  <img 
+                    src={session.user.image} 
+                    alt="User Icon" 
+                    className="w-8 h-8 rounded-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
+                  />
+                )}
+                <span className="text-gray-100 text-sm sm:text-base hidden sm:inline-block">
+                  {session.user?.name || session.user?.email}
+                </span>
+              </div>
+              <div className="flex items-center gap-4">
+                <FaEnvelope className="text-gray-100 cursor-pointer hover:text-gray-300 transition-colors" onClick={() => setIsModalOpen(true)} />
+                <button
+                  onClick={() => signOut()}
+                  className="text-sm text-red-400 hover:text-red-300 transition-colors"
+                >
+                  ログアウト
+                </button>
+              </div>
               <Modal
                 isOpen={isModalOpen}
                 onRequestClose={() => setIsModalOpen(false)}
                 contentLabel="Email Modal"
-                className="bg-white p-4 rounded-md shadow-lg"
-                overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+                className="bg-white p-4 rounded-md shadow-lg max-w-sm mx-auto"
+                overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4"
               >
                 <h2 className="text-lg font-bold mb-2 text-gray-900">メールアドレス</h2>
-                <p className="text-gray-700">{session.user?.email}</p>
-                <button onClick={() => setIsModalOpen(false)} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                <p className="text-gray-700 break-all">{session.user?.email}</p>
+                <button 
+                  onClick={() => setIsModalOpen(false)} 
+                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors w-full"
+                >
                   閉じる
                 </button>
               </Modal>
-              <button
-                onClick={() => signOut()}
-                className="text-sm text-red-400 hover:text-red-300"
-              >
-                ログアウト
-              </button>
             </div>
           ) : (
             <button
