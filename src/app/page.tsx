@@ -115,35 +115,35 @@ export default function Home() {
               <h2 className="text-2xl font-bold mb-6 text-gray-900">Terms of Service</h2>
               
               <section className="mb-8">
-                <h3 className="text-xl font-bold mb-4 text-gray-900">1. API Scope</h3>
-                <p className="mb-4 text-gray-700">This application uses the following Google Calendar API scope:</p>
+                <h3 className="text-xl font-bold mb-4 text-gray-900">1. APIスコープ</h3>
+                <p className="mb-4 text-gray-700">このアプリケーションは以下のGoogle Calendar APIスコープを使用します：</p>
                 <ul className="list-disc pl-6 mb-4">
                   <li className="mb-2">
                     <code className="bg-gray-100 px-2 py-1 rounded text-gray-900">
                       https://www.googleapis.com/auth/calendar.events
                     </code>
                     <p className="mt-1 text-gray-600">
-                      This scope allows the application to add events to your Google Calendar.
+                      このスコープにより、アプリケーションはあなたのGoogleカレンダーにイベントを追加することができます。
                     </p>
                   </li>
                 </ul>
               </section>
 
               <section className="mb-8">
-                <h3 className="text-xl font-bold mb-4 text-gray-900">2. Disclaimer</h3>
+                <h3 className="text-xl font-bold mb-4 text-gray-900">2. 免責事項</h3>
                 <p className="mb-4 text-gray-700">
-                  The developer is not responsible for any damages caused by using this application.
-                  Please verify the event details before registration.
+                  開発者は、このアプリケーションの使用によって生じたいかなる損害についても責任を負いません。
+                  イベントの登録前に、詳細を必ずご確認ください。
                 </p>
                 <p className="mb-4 text-gray-700">
-                  For more information about how we handle your data, please read our{' '}
+                  データの取り扱いについての詳細は、{' '}
                   <a
                     href="/privacy-policy"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-500 hover:text-blue-600"
                   >
-                    Privacy Policy
+                    プライバシーポリシー
                   </a>
                   .
                 </p>
