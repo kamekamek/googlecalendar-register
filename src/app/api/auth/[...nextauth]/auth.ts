@@ -10,7 +10,7 @@ export const authOptions: AuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
       authorization: {
         params: {
-          scope: 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar openid email profile',
+          scope: 'https://www.googleapis.com/auth/calendar.events openid email',
           access_type: 'offline',
           prompt: 'consent',
           response_type: 'code',

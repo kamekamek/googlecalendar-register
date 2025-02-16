@@ -26,7 +26,10 @@ export interface CalendarEvent {
 
 // カレンダークライアントを初期化する関数
 function initializeCalendarClient(accessToken: string) {
-  oauth2Client.setCredentials({ access_token: accessToken });
+  oauth2Client.setCredentials({ 
+    access_token: accessToken,
+    scope: 'https://www.googleapis.com/auth/calendar.events'
+  });
   return google.calendar({ version: 'v3', auth: oauth2Client });
 }
 
