@@ -18,4 +18,23 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* モバイル向け最適化 */
+input, textarea, select, button {
+  font-size: 16px; /* iOSで自動ズームを防止 */
+  touch-action: manipulation; /* ダブルタップでのズームを防止 */
+}
+
+/* タッチターゲットサイズの最適化 */
+button, a {
+  min-height: 44px;
+  padding: 8px;
+}
+
+/* フォーカス状態の視覚的フィードバック */
+button:focus, a:focus, input:focus, textarea:focus {
+  outline: 2px solid #4299e1;
+  outline-offset: 2px;
 }
