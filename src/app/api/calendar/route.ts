@@ -17,6 +17,15 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       );
     }
+    
+    if (token.error === 'RefreshAccessTokenError') {
+      console.log('Debug: Refresh token error detected');
+      return NextResponse.json(
+        { error: '認証の有効期限が切れました。再度ログインしてください。' },
+        { status: 401 }
+      );
+    }
+    
     console.log('Debug: Access token found:', token.accessToken.substring(0, 10) + '...');
 
     const { text } = await request.json();
@@ -67,4 +76,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}  

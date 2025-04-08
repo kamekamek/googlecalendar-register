@@ -37,6 +37,14 @@ export default function Home() {
       return;
     }
 
+    if (session.error === 'RefreshAccessTokenError') {
+      setResult({
+        success: false,
+        message: '認証の有効期限が切れました。再度ログインしてください。',
+      });
+      return;
+    }
+
     setLoading(true);
     setResult(null);
 
@@ -271,4 +279,4 @@ export default function Home() {
       </main>
     </>
   );
-} 
+}  
