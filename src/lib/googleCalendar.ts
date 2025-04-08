@@ -53,6 +53,10 @@ export async function addEvent(event: CalendarEvent, accessToken: string) {
         statusText: error.response.statusText,
         data: error.response.data
       });
+      
+      if (error.response.status === 401) {
+        throw new Error('AuthenticationError');
+      }
     }
     throw error;
   }
@@ -78,4 +82,4 @@ export async function addEvents(events: CalendarEvent[], accessToken: string) {
   );
 
   return Promise.all(promises);
-} 
+}  
