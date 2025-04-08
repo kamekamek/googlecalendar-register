@@ -5,6 +5,8 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import { FaEnvelope } from 'react-icons/fa';
 import Modal from 'react-modal';
 import BackgroundGradient from '@/components/BackgroundGradient';
+import InstallBanner from '@/components/InstallBanner';
+import InputGuide from '@/components/InputGuide';
 
 if (typeof window !== 'undefined') {
   Modal.setAppElement('body');
@@ -93,23 +95,24 @@ export default function Home() {
   return (
     <>
       <BackgroundGradient />
+      <InstallBanner />
       <main className="container mx-auto px-4 py-8 relative">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-4">Googleカレンダー一括登録</h1>
-            <div className="text-gray-100 space-y-2">
+            <h1 className="text-2xl md:text-3xl font-bold mb-4">Googleカレンダー一括登録</h1>
+            <div className="text-gray-100 space-y-2 text-sm md:text-base">
               <p>📝 入力欄に日付・時刻・予定を文章で入力するだけで簡単に予定が登録できます！</p>
               <p>📅 複数の予定を登録する場合は、行間を1行開けて入力してください。</p>
               <p className="text-yellow-400">※ 日付は2024/1/8、2024/01/08、1/8など柔軟に対応</p>
               <p className="text-yellow-400">※ 時刻は13:00-14:00、13時から14時、13:00～14:00など柔軟に対応</p>
             </div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4 mt-4 md:mt-0">
             <a
               href="/privacy-policy"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-gray-400 hover:text-gray-300"
+              className="text-xs md:text-sm text-gray-400 hover:text-gray-300"
             >
               Privacy Policy
             </a>
@@ -117,8 +120,8 @@ export default function Home() {
               isOpen={isTermsModalOpen}
               onRequestClose={() => setIsTermsModalOpen(false)}
               contentLabel="Terms and Privacy"
-              className="bg-white p-8 rounded-md shadow-lg max-w-2xl mx-4 max-h-[80vh] overflow-y-auto"
-              overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+              className="bg-white p-4 md:p-8 rounded-md shadow-lg max-w-sm md:max-w-2xl mx-4 max-h-[80vh] overflow-y-auto"
+              overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4"
             >
               <h2 className="text-2xl font-bold mb-6 text-gray-900">Terms of Service</h2>
               
@@ -214,7 +217,7 @@ export default function Home() {
                   isOpen={isModalOpen}
                   onRequestClose={() => setIsModalOpen(false)}
                   contentLabel="Email Modal"
-                  className="bg-white p-4 rounded-md shadow-lg max-w-sm mx-auto"
+                  className="bg-white p-4 md:p-6 rounded-md shadow-lg max-w-sm mx-4 max-h-[80vh] overflow-y-auto"
                   overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4"
                 >
                   <h2 className="text-lg font-bold mb-2 text-gray-900">メールアドレス</h2>
@@ -244,11 +247,12 @@ export default function Home() {
               <label htmlFor="text" className="block text-base font-medium mb-2 text-gray-100">
                 イベントテキスト
               </label>
+              <InputGuide />
               <textarea
                 id="text"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                className="w-full h-[600px] p-4 border rounded-md bg-gray-800 text-gray-100 placeholder-gray-400"
+                className="w-full h-[300px] md:h-[600px] p-4 border rounded-md bg-gray-800 text-gray-100 placeholder-gray-400 text-base"
                 placeholder="例：会議: 2024/01/08 13:00-14:00 [会議室A]"
               />
             </div>
@@ -269,14 +273,20 @@ export default function Home() {
 
         {result && (
           <div
-            className={`mt-4 p-4 rounded-md ${
+            className={`fixed bottom-0 left-0 right-0 m-4 p-4 rounded-md shadow-lg z-50 ${
               result.success ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
             }`}
           >
             {result.message}
+            <button 
+              onClick={() => setResult(null)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+            >
+              ✕
+            </button>
           </div>
         )}
       </main>
     </>
   );
-}  
+}                                    
