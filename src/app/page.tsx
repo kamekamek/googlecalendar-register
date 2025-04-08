@@ -7,6 +7,7 @@ import Modal from 'react-modal';
 import BackgroundGradient from '@/components/BackgroundGradient';
 import InstallBanner from '@/components/InstallBanner';
 import InputGuide from '@/components/InputGuide';
+import UserAvatar from '@/components/UserAvatar';
 
 if (typeof window !== 'undefined') {
   Modal.setAppElement('body');
@@ -188,22 +189,7 @@ export default function Home() {
 
             {session ? (
               <div className="flex items-center gap-4 flex-wrap sm:flex-nowrap">
-                <div className="flex items-center gap-2 order-1 sm:order-none">
-                  {session.user?.image && (
-                    <img 
-                      src={session.user.image} 
-                      alt="User Icon" 
-                      className="w-8 h-8 rounded-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                      }}
-                    />
-                  )}
-                  <span className="text-gray-100 text-sm sm:text-base hidden sm:inline-block">
-                    {session.user?.name || session.user?.email}
-                  </span>
-                </div>
+                <UserAvatar />
                 <div className="flex items-center gap-4">
                   <FaEnvelope className="text-gray-100 cursor-pointer hover:text-gray-300 transition-colors" onClick={() => setIsModalOpen(true)} />
                   <button
@@ -289,4 +275,4 @@ export default function Home() {
       </main>
     </>
   );
-}                                    
+}                                            
