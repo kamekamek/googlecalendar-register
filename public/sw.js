@@ -20,6 +20,11 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  if (event.request.url.includes('/api/auth') || 
+      event.request.url.includes('/api/calendar')) {
+    return event.respondWith(fetch(event.request));
+  }
+  
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
@@ -30,10 +35,12 @@ self.addEventListener('fetch', (event) => {
           .then((response) => {
             const responseToCache = response.clone();
             if (event.request.method === 'GET') {
-              caches.open(CACHE_NAME)
-                .then((cache) => {
-                  cache.put(event.request, responseToCache);
-                });
+              if (!event.request.url.includes('/api/')) {
+                caches.open(CACHE_NAME)
+                  .then((cache) => {
+                    cache.put(event.request, responseToCache);
+                  });
+              }
             }
             return response;
           })
