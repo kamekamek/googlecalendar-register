@@ -16,8 +16,11 @@ export const metadata = {
     title: 'カレンダー登録',
   },
   icons: {
-    icon: [{ url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' }],
-    apple: [{ url: '/icons/icon-192x192.png' }],
+    icon: [
+      { url: '/favicon.ico', sizes: '16x16 32x32', type: 'image/x-icon' },
+      { url: '/favicon.png', sizes: '192x192', type: 'image/png' }
+    ],
+    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180' }],
   },
   verification: {
     google: 'SqrhZW6D8zk5AB_Lp2cyHQrOukiDjzlsL0Gl3Uy4lgI',
@@ -39,4 +42,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-}    
+}        
